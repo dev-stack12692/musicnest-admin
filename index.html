@@ -29,6 +29,7 @@
   label { font-size: 12.5px; font-weight: 700; color: var(--muted); display: block; margin: 10px 0 4px; }
   .grid2 { display: grid; grid-template-columns: 90px 1fr; gap: 12px; }
   .muted { color: var(--muted); font-size: 13px; }
+  .hint { font-weight: 400; color: var(--muted); font-size: 12px; }
   .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; }
   .badge-pub { background: #e5f6e5; color: #1a7f37; }
   .badge-draft { background: #fff3d6; color: #9a6700; }
@@ -71,6 +72,16 @@
 
   <div id="appView" class="hidden">
     <div class="card">
+      <h2>How it works</h2>
+      <p class="muted" style="line-height:1.7">
+        1. Click <b>+ New playlist</b>, give it a title, add songs with the search box (or paste an exact YouTube link).<br>
+        2. The <b>emoji</b> is the playlist's icon in the app when it has no cover image.<br>
+        3. Tick <b>Published</b> and Save - within seconds the playlist appears on every user's Home screen and in search.<br>
+        4. <b>Share:</b> in the app, open the playlist and tap the share button (top right) - friends get the playlist name and the app link.<br>
+        5. To remove a playlist from every app, open it here and click <b>Delete</b>.
+      </p>
+    </div>
+    <div class="card">
       <div class="row spread">
         <h2>Your playlists</h2>
         <button id="newBtn" class="btn">+ New playlist</button>
@@ -82,7 +93,7 @@
       <h2 id="editorTitle">Edit playlist</h2>
       <div class="grid2">
         <div>
-          <label>Emoji</label>
+          <label>Emoji <span class="hint">- the playlist's icon in the app when no cover image is set</span></label>
           <input type="text" id="fEmoji" maxlength="4" placeholder="🎵">
           <label>Order</label>
           <input type="number" id="fOrder" value="0">
@@ -94,8 +105,17 @@
           <input type="text" id="fDesc" placeholder="Garba & devotional essentials">
         </div>
       </div>
-      <label>Cover image URL (optional - first song's artwork is used otherwise)</label>
-      <input type="text" id="fCover" placeholder="https://...">
+      <label>Cover image (optional - first song's artwork is used otherwise)</label>
+      <div class="row">
+        <input type="text" id="fCover" placeholder="https://... paste a link, or upload from this device ->">
+        <button id="coverUploadBtn" class="btn-ghost btn-small" type="button">Upload</button>
+      </div>
+      <input type="file" id="coverFile" accept="image/*" class="hidden">
+      <div id="coverPreview" class="row hidden" style="margin-top:8px">
+        <img id="coverPreviewImg" style="width:84px;height:84px;border-radius:12px;object-fit:cover" alt="Cover preview">
+        <button id="coverRemoveBtn" class="btn-danger btn-small" type="button">Remove image</button>
+      </div>
+      <p class="hint" style="margin-top:4px">Uploads are shrunk and saved inside the playlist itself (free plan - no storage needed). Square images look best.</p>
       <label class="row" style="margin-top:14px"><input type="checkbox" id="fPublished" style="width:auto"> Published (visible in every user's app)</label>
 
       <h3>Add songs - search</h3>
@@ -150,6 +170,7 @@ const $ = (id) => document.getElementById(id);
 let playlists = [];       // [{id, ...data}]
 let editingId = null;     // null = new
 let editSongs = [];       // [{title, artist, query, videoId}]
+let coverData = null;     // uploaded image as a small data URL (wins over the URL field)
 
 function toast(msg) {
   const t = $("toast"); t.textContent = msg; t.style.opacity = 1;
@@ -218,7 +239,16 @@ function openEditor(p) {
   $("fEmoji").value = p?.emoji || "🎵";
   $("fTitle").value = p?.title || "";
   $("fDesc").value = p?.description || "";
-  $("fCover").value = p?.coverUrl || "";
+  if ((p?.coverUrl || "").startsWith("data:image")) {
+    coverData = p.coverUrl;
+    $("fCover").value = "";
+    $("coverPreviewImg").src = coverData;
+    $("coverPreview").classList.remove("hidden");
+  } else {
+    coverData = null;
+    $("fCover").value = p?.coverUrl || "";
+    $("coverPreview").classList.add("hidden");
+  }
   $("fOrder").value = p?.order ?? 0;
   $("fPublished").checked = !!p?.published;
   $("deleteBtn").classList.toggle("hidden", !p);
@@ -304,6 +334,44 @@ $("ytBtn").onclick = () => {
   toast("Added exact video");
 };
 
+// ---------- cover upload (downscaled, stored inside the Firestore doc) ----------
+$("coverUploadBtn").onclick = () => $("coverFile").click();
+$("coverFile").onchange = async (e) => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  try {
+    let dataUrl = await fileToCoverData(file, 512, 0.82);
+    if (dataUrl.length > 700000) dataUrl = await fileToCoverData(file, 384, 0.7);
+    if (dataUrl.length > 700000) { toast("Image is too detailed - try a simpler one"); return; }
+    coverData = dataUrl;
+    $("coverPreviewImg").src = coverData;
+    $("coverPreview").classList.remove("hidden");
+    toast("Cover image ready - save the playlist to keep it");
+  } catch (err) {
+    toast("Could not read that image");
+  }
+};
+$("coverRemoveBtn").onclick = () => {
+  coverData = null;
+  $("coverPreview").classList.add("hidden");
+};
+
+async function fileToCoverData(file, maxSize, quality) {
+  const bmp = await createImageBitmap(file);
+  const scale = Math.min(1, maxSize / Math.max(bmp.width, bmp.height));
+  const w = Math.max(1, Math.round(bmp.width * scale));
+  const h = Math.max(1, Math.round(bmp.height * scale));
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(bmp, 0, 0, w, h);
+  bmp.close && bmp.close();
+  return c.toDataURL("image/jpeg", quality);
+}
+
 // ---------- save / delete ----------
 $("saveBtn").onclick = async () => {
   const title = $("fTitle").value.trim();
@@ -313,7 +381,7 @@ $("saveBtn").onclick = async () => {
     title,
     emoji: $("fEmoji").value.trim() || "🎵",
     description: $("fDesc").value.trim(),
-    coverUrl: $("fCover").value.trim(),
+    coverUrl: coverData || $("fCover").value.trim(),
     order: parseInt($("fOrder").value || "0", 10) || 0,
     published: $("fPublished").checked,
     songs: editSongs.map(s => ({ title: s.title, artist: s.artist, query: s.query, videoId: s.videoId || "" })),
