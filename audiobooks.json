@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "audiobooks": [
+    {
+      "id": "haveli-ka-teesra-kamra",
+      "title": "हवेली का तीसरा कमरा",
+      "author": "MusicNest Originals",
+      "narrator": "Kokoro hm_omega (AI voice)",
+      "description": "रतनपुर गांव की सबसे पुरानी हवेली। 14 साल का आरव दादी के पास छुट्टियां बिताने आता है - हवेली के तीन नियम, एक बंद तीसरा कमरा, और साठ साल पुरानी सच्चाई। सुनिए 7 अध्यायों की डरावनी कहानी।\n\nNarration: Kokoro-82M (Apache-2.0), Hindi voice hm_omega, via kokoro-onnx (MIT). Music & effects: original synthesized score, no third-party recordings.",
+      "coverUrl": "https://dev-stack12692.github.io/musicnest-admin/covers/haveli-ka-teesra-kamra.jpg",
+      "language": "hi",
+      "credits": "Narration generated using Kokoro-82M (Apache-2.0), Hindi voice hm_omega, via kokoro-onnx (MIT). Original synthesized music and sound effects; no third-party recordings.",
+      "chapters": [
+        {
+          "id": "ch1",
+          "title": "अध्याय 1 - तीन नियम",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_01.mp3",
+          "durationMs": 300576
+        },
+        {
+          "id": "ch2",
+          "title": "अध्याय 2 - पैरों के निशान",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_02.mp3",
+          "durationMs": 289824
+        },
+        {
+          "id": "ch3",
+          "title": "अध्याय 3 - दादी का खाली बिस्तर",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_03.mp3",
+          "durationMs": 291360
+        },
+        {
+          "id": "ch4",
+          "title": "अध्याय 4 - कमला बुआ",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_04.mp3",
+          "durationMs": 323976
+        },
+        {
+          "id": "ch5",
+          "title": "अध्याय 5 - तीसरा कमरा",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_05.mp3",
+          "durationMs": 283464
+        },
+        {
+          "id": "ch6",
+          "title": "अध्याय 6 - साठ साल पुरानी सच्चाई",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_06.mp3",
+          "durationMs": 311280
+        },
+        {
+          "id": "ch7",
+          "title": "अध्याय 7 - अमावस्या की रात",
+          "url": "https://github.com/dev-stack12692/musicnest-admin/releases/download/audiobooks-v1/Haveli_Final_v4_Chapter_07.mp3",
+          "durationMs": 267744
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+हवेली का तीसरा कमरा
+Final audiobook production credits
+
+Original Hindi horror/suspense story newly written for Swapnendu Mal / MusicNest. Seven chapters, approximately 34 minutes 28 seconds. Narration: synthesized Hindi male voice hm_omega using Kokoro-82M v1.0 (hexgrad). Model weights licensed under Apache-2.0. Local inference via kokoro-onnx (thewh1teagle), MIT license.
+
+Suggested app credit:
+Narration generated using Kokoro-82M (Apache-2.0), Hindi voice hm_omega, via kokoro-onnx (MIT). Original synthesized suspense score and sound effects created for this production; no third-party music or sound recordings used.
+
+Voice sources and license:
+https://huggingface.co/hexgrad/Kokoro-82M
+https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md
+https://github.com/hexgrad/kokoro/blob/main/LICENSE
+https://github.com/thewh1teagle/kokoro-onnx/
+https://www.apache.org/licenses/LICENSE-2.0
+
+Music/effects provenance:
+Locally generated numerical audio synthesis: custom slow minor-key sine-wave motif, detuned pads, filtered-noise wind textures, pitch-gliding wood-creak textures, damped sinusoid heartbeat and footstep pulses, and short dissonant tension stings. No downloaded music, recording, sampled melody, or third-party sound asset used. No external asset license or attribution applies to these newly synthesized sound beds. No familiar composition intentionally reproduced.
+
+Important:
+These credits describe the production technology and provenance. The Apache/MIT labels apply to the voice model/runner, not a claim that the entire audiobook is open source or public domain. No separate spoken attribution requirement for generated speech was found in the model card. Preserve applicable license notices if distributing model weights or code. These credits are not a legal opinion or guarantee of copyright eligibility or exclusivity.
+
+Final file version: v4 only. Earlier samples and v1-v3 mixes are superseded.
